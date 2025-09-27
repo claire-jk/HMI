@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>情緒 × 語言 音樂推薦系統</title>
+  <link rel="stylesheet" href="css/song.css">
+</head>
+<body class="mood-background"> <!-- 加了 class 方便做背景呼吸動畫 -->
+  <div class="container">
+    <h1>🎶 Mood Playlist Recommender</h1>
+    
+    <div class="section">
+      <h2>選擇心情</h2>
+      <div class="buttons">
+        <button class="mood-btn" data-mood="喜">喜</button>
+        <button class="mood-btn" data-mood="怒">怒</button>
+        <button class="mood-btn" data-mood="哀">哀</button>
+        <button class="mood-btn" data-mood="平靜">平靜</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>選擇歌曲語言</h2>
+      <select id="language">
+        <option value="中">中文</option>
+        <option value="日">日文</option>
+        <option value="韓">韓文</option>
+        <option value="英">英文</option>
+        <option value="無差">無差</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <button id="recommend-btn">推薦歌單</button>
+    </div>
+
+    <div id="result" class="section hidden">
+      <h2>推薦結果</h2>
+      <p id="playlist-name"></p>
+      <a id="playlist-link" target="_blank">▶ 前往播放</a>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
