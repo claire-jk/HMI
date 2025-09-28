@@ -6,24 +6,28 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background 1s ease;
+  transition: background 1s ease, color 0.5s ease;
 }
 
 /* === 天氣背景 === */
 .weather-default {
   background: linear-gradient(135deg, #cfd9df, #e2ebf0);
+  color: #333;
 }
 
 .weather-sunny {
   background: linear-gradient(135deg, #fceabb, #f8b500);
+  color: #333;
 }
 
 .weather-cloudy {
   background: linear-gradient(135deg, #bdc3c7, #2c3e50);
+  color: #fff;
 }
 
 .weather-rainy {
   background: linear-gradient(135deg, #667db6, #0082c8, #2c3e50);
+  color: #fff;
 }
 
 .weather-night {
@@ -34,7 +38,7 @@ body {
 /* 容器 */
 .container {
   text-align: center;
-  color: #333;
+  color: inherit; /* 跟隨 body 顏色 */
   background: rgba(255, 255, 255, 0.3);
   padding: 30px;
   border-radius: 15px;
@@ -42,6 +46,13 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   width: 90%;
   max-width: 500px;
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+/* 夜晚模式下容器背景要偏暗 */
+.weather-night .container {
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
 }
 
 /* 日期時間 */
@@ -60,9 +71,10 @@ body {
   font-size: 1.2rem;
   margin-bottom: 25px;
   font-weight: bold;
-  color: #222;
+  color: inherit; /* 跟隨 body 顏色 */
 }
 
+/* 重大事件按鈕 */
 #next-event-link {
   display: inline-block;
   margin-top: 5px;
@@ -77,6 +89,16 @@ body {
 #next-event-link:hover {
   background: #4a90e2;
   transform: scale(1.05);
+}
+
+/* 夜晚模式下按鈕顏色調暗 */
+.weather-night #next-event-link {
+  background: #444;
+  color: #fff;
+}
+
+.weather-night #next-event-link:hover {
+  background: #666;
 }
 
 /* 選單按鈕 */
@@ -101,6 +123,16 @@ body {
 .menu-btn:hover {
   background: #4a90e2;
   transform: scale(1.05);
+}
+
+/* 夜晚模式下選單按鈕調整 */
+.weather-night .menu-btn {
+  background: #444;
+  color: #fff;
+}
+
+.weather-night .menu-btn:hover {
+  background: #666;
 }
 
 /* 響應式 */

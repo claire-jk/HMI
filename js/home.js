@@ -23,7 +23,7 @@ async function updateWeather() {
       return;
     }
 
-    // 白天才看天氣 API
+    // 白天才依照天氣 API 切換
     const url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-9BEFF585-4A1F-44D6-AD64-D676D2812788&locationName=臺北市";
     const res = await fetch(url);
     const data = await res.json();
@@ -39,9 +39,12 @@ async function updateWeather() {
       document.body.className = "weather-default";
     }
 
-    document.body.style.color = "#333"; // 白天字體深色
+    // 白天字體用深色
+    document.body.style.color = "#333"; 
   } catch (err) {
     console.log("天氣資料抓取失敗，使用預設背景", err);
+    document.body.className = "weather-default";
+    document.body.style.color = "#333";
   }
 }
 updateWeather();
