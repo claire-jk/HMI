@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>行程列表</title>
+  <!-- 引入 Font Awesome icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/schedule.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Great+Vibes&family=Lexend:wght@100..900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <!-- 左上角首頁 icon -->
+    <a href="index.html" class="home-icon"><i class="fas fa-home"></i></a>
+    <h1>行程列表</h1>
+  </header>
+
+  <section class="calendar">
+    <div class="month-controls">
+      <button id="prev-month">〈</button>
+      <h2 id="month-title"></h2>
+      <button id="next-month">〉</button>
+    </div>
+    <div class="calendar-grid" id="calendar-grid"></div>
+  </section>
+
+  <section class="schedule">
+    <h2 id="schedule-title">當日行程</h2>
+    <ul id="task-list"></ul>
+
+    <div class="add-task">
+      <input type="text" id="task-input" placeholder="HH:MM 行程名稱">
+      <button id="add-task-btn">新增</button>
+    </div>
+  </section>
+
+  <script src="js/schedule.js"></script>
+</body>
+</html>

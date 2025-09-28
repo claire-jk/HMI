@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 響應式必要 -->
+  <title>情緒 × 語言 音樂推薦系統</title>
+  <link rel="stylesheet" href="css/song.css">
+  <!-- 引入 Font Awesome icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Great+Vibes&family=Lexend:wght@100..900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+</head>
+<body class="mood-background">
+  <!-- 左上角首頁 icon -->
+  <a href="index.html" class="home-icon"><i class="fas fa-home"></i></a>
+
+  <div class="container">
+    <h1>🎶 Mood Playlist Recommender</h1>
+    
+    <div class="section">
+      <h2>選擇心情</h2>
+      <div class="buttons">
+        <button class="mood-btn" data-mood="喜">喜</button>
+        <button class="mood-btn" data-mood="怒">怒</button>
+        <button class="mood-btn" data-mood="哀">哀</button>
+        <button class="mood-btn" data-mood="平靜">平靜</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>選擇歌曲語言</h2>
+      <select id="language">
+        <option value="中">中文</option>
+        <option value="日">日文</option>
+        <option value="韓">韓文</option>
+        <option value="英">英文</option>
+        <option value="無差">無差</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <button id="recommend-btn">推薦歌單</button>
+    </div>
+
+    <div id="result" class="section hidden">
+      <h2>推薦結果</h2>
+      <p id="playlist-name"></p>
+      <a id="playlist-link" target="_blank">▶ 前往播放</a>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

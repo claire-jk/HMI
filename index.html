@@ -1,46 +1,36 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>情緒 × 語言 音樂推薦系統</title>
-  <link rel="stylesheet" href="css/song.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的首頁</title>
+  <link rel="stylesheet" href="css/mainpage.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Great+Vibes&family=Lexend:wght@100..900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
 </head>
-<body class="mood-background"> <!-- 加了 class 方便做背景呼吸動畫 -->
+<body class="weather-default">
   <div class="container">
-    <h1>🎶 Mood Playlist Recommender</h1>
-    
-    <div class="section">
-      <h2>選擇心情</h2>
-      <div class="buttons">
-        <button class="mood-btn" data-mood="喜">喜</button>
-        <button class="mood-btn" data-mood="怒">怒</button>
-        <button class="mood-btn" data-mood="哀">哀</button>
-        <button class="mood-btn" data-mood="平靜">平靜</button>
-      </div>
+    <!-- 日期與時間 -->
+    <div class="datetime">
+      <h1 id="date">2025-09-28</h1>
+      <h2 id="time">16:35:00</h2>
     </div>
 
-    <div class="section">
-      <h2>選擇歌曲語言</h2>
-      <select id="language">
-        <option value="中">中文</option>
-        <option value="日">日文</option>
-        <option value="韓">韓文</option>
-        <option value="英">英文</option>
-        <option value="無差">無差</option>
-      </select>
+    <!-- 即將到來的重大事件 -->
+    <div class="event">
+      <p>📌 下一個重大事件：</p>
+      <a href="event.html" id="next-event-link">無事件</a>
     </div>
 
-    <div class="section">
-      <button id="recommend-btn">推薦歌單</button>
-    </div>
-
-    <div id="result" class="section hidden">
-      <h2>推薦結果</h2>
-      <p id="playlist-name"></p>
-      <a id="playlist-link" target="_blank">▶ 前往播放</a>
+    <!-- 功能選單 -->
+    <div class="menu">
+      <a href="schedule.html" class="menu-btn">📅 行程列表</a>
+      <a href="event.html" class="menu-btn">⭐ 重大事件</a>
+      <a href="song.html" class="menu-btn">🎶 歌曲</a>
     </div>
   </div>
 
-  <script src="js/script.js"></script>
+  <script src="js/home.js"></script>
 </body>
 </html>

@@ -1,0 +1,119 @@
+/* 預設樣式 */
+body {
+  margin: 0;
+  font-family: "Zen Kurenaido", sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 1s ease;
+}
+
+/* === 天氣背景 === */
+.weather-default {
+  background: linear-gradient(135deg, #cfd9df, #e2ebf0);
+}
+
+.weather-sunny {
+  background: linear-gradient(135deg, #fceabb, #f8b500);
+}
+
+.weather-cloudy {
+  background: linear-gradient(135deg, #bdc3c7, #2c3e50);
+}
+
+.weather-rainy {
+  background: linear-gradient(135deg, #667db6, #0082c8, #2c3e50);
+}
+
+.weather-night {
+  background: linear-gradient(135deg, #141e30, #243b55);
+}
+
+/* 容器 */
+.container {
+  text-align: center;
+  color: #333;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 30px;
+  border-radius: 15px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 500px;
+}
+
+/* 日期時間 */
+.datetime h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.datetime h2 {
+  font-size: 1.5rem;
+  margin: 10px 0 20px;
+}
+
+/* 重大事件 */
+.event {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  font-weight: bold;
+  color: #222;
+}
+
+#next-event-link {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 8px 12px;
+  background: #8ec5fc;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+#next-event-link:hover {
+  background: #4a90e2;
+  transform: scale(1.05);
+}
+
+/* 選單按鈕 */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.menu-btn {
+  display: block;
+  text-decoration: none;
+  background: #8ec5fc;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  color: #fff;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.menu-btn:hover {
+  background: #4a90e2;
+  transform: scale(1.05);
+}
+
+/* 響應式 */
+@media (max-width: 480px) {
+  .datetime h1 {
+    font-size: 1.5rem;
+  }
+
+  .datetime h2 {
+    font-size: 1.2rem;
+  }
+
+  .menu-btn {
+    font-size: 1rem;
+    padding: 10px;
+  }
+}

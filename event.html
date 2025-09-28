@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重大事件列表</title>
+  <!-- 引入 Font Awesome icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/event.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Great+Vibes&family=Lexend:wght@100..900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <!-- 左上角首頁 icon -->
+    <a href="index.html" class="home-icon"><i class="fas fa-home"></i></a>
+    <h1>重大事件</h1>
+  </header>
+
+  <section class="events-section">
+    <h2>即將到來的事件</h2>
+    <ul id="event-list"></ul>
+
+    <div class="add-event">
+      <input type="date" id="event-date">
+      <input type="time" id="event-time">
+      <input type="text" id="event-name" placeholder="事件名稱">
+      <button id="add-event-btn">新增</button>
+    </div>
+  </section>
+
+  <script src="js/event.js"></script>
+</body>
+</html>
