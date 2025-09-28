@@ -28,6 +28,7 @@ body {
 
 .weather-night {
   background: linear-gradient(135deg, #141e30, #243b55);
+  color: #fff;   /* 夜晚字體白色 */
 }
 
 /* 容器 */

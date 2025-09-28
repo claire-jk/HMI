@@ -11,31 +11,35 @@ function updateDateTime() {
 setInterval(updateDateTime, 1000);
 updateDateTime();
 
-// ======= 簡單判斷白天/晚上背景 =======
-function updateDayNight() {
-  const hour = new Date().getHours();
-  if (hour >= 18 || hour < 6) {
-    document.body.className = "weather-night";
-  }
-}
-updateDayNight();
-
-// ======= 取得台北市天氣 → 切換背景 =======
+// ======= 更新天氣背景（夜晚優先） =======
 async function updateWeather() {
   try {
+    const hour = new Date().getHours();
+
+    // ✅ 晚上固定夜晚背景 + 白字
+    if (hour >= 18 || hour < 6) {
+      document.body.className = "weather-night";
+      document.body.style.color = "#fff";
+      return;
+    }
+
+    // 白天才看天氣 API
     const url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-9BEFF585-4A1F-44D6-AD64-D676D2812788&locationName=臺北市";
     const res = await fetch(url);
     const data = await res.json();
     const wx = data.records.location[0].weatherElement[0].time[0].parameter.parameterName;
 
-    // 簡單關鍵字判斷
     if (wx.includes("晴")) {
       document.body.className = "weather-sunny";
     } else if (wx.includes("雲") || wx.includes("陰")) {
       document.body.className = "weather-cloudy";
     } else if (wx.includes("雨")) {
       document.body.className = "weather-rainy";
+    } else {
+      document.body.className = "weather-default";
     }
+
+    document.body.style.color = "#333"; // 白天字體深色
   } catch (err) {
     console.log("天氣資料抓取失敗，使用預設背景", err);
   }
