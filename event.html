@@ -20,13 +20,23 @@
 
   <section class="events-section">
     <h2>即將到來的事件</h2>
-    <ul id="event-list"></ul>
+    <!-- 事件列表 -->
+    <ul id="event-list">
+      <!-- 範例結構，JS 會動態生成 -->
+      <!--
+      <li>
+        2025-10-10 14:00 國慶煙火
+        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+      </li>
+      -->
+    </ul>
 
+    <!-- 新增事件表單 -->
     <div class="add-event">
       <input type="date" id="event-date">
       <input type="time" id="event-time">
-      <input type="text" id="event-name" placeholder="事件名稱">
-      <button id="add-event-btn">新增</button>
+      <input type="text" id="event-text" placeholder="輸入事件名稱">
+      <button id="add-btn">新增事件</button>
     </div>
   </section>
 

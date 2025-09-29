@@ -96,8 +96,10 @@ header h1 {
   align-items: center;
   padding: 8px;
   border-bottom: 1px solid #555;
+  gap: 10px;
 }
 
+/* 新增/刪除/星號按鈕 */
 .add-task {
   display: flex;
   margin-top: 15px;
@@ -134,6 +136,18 @@ header h1 {
 
 .star-btn:hover {
   color: #ffea00;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  color: #ff4444;
 }
 
 @media (max-width: 480px) {

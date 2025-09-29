@@ -17,7 +17,6 @@ async function updateWeather() {
   try {
     const hour = new Date().getHours();
 
-    // ✅ 晚上固定夜晚背景 + 白字
     if (hour >= 18 || hour < 6) {
       document.body.className = "weather-night";
       document.body.style.color = "#fff";
@@ -25,13 +24,12 @@ async function updateWeather() {
       return;
     }
 
-    // 白天才依照天氣 API 切換
     const url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-9BEFF585-4A1F-44D6-AD64-D676D2812788&locationName=臺北市";
     const res = await fetch(url);
     const data = await res.json();
     const wx = data.records.location[0].weatherElement[0].time[0].parameter.parameterName;
 
-    let icon = "🌤"; // 預設
+    let icon = "🌤";
     if (wx.includes("晴")) {
       document.body.className = "weather-sunny";
       icon = "☀️";
@@ -46,10 +44,7 @@ async function updateWeather() {
       icon = "🌤";
     }
 
-    // 白天字體用深色
     document.body.style.color = "#333";
-
-    // ✅ 更新小區塊（含圖示）
     weatherInfo.innerHTML = `<span class="icon">${icon}</span> 台北市目前天氣：${wx}`;
 
   } catch (err) {
@@ -59,22 +54,28 @@ async function updateWeather() {
     weatherInfo.innerHTML = `<span class="icon">⚠️</span> 天氣資料載入失敗`;
   }
 }
-
 updateWeather();
 
 // ======= 顯示下一個重大事件 =======
-let eventsData = JSON.parse(localStorage.getItem("eventsData")) || [];
-
 function getNextEvent() {
   const now = new Date();
-  const upcoming = eventsData
+  let eventData = JSON.parse(localStorage.getItem("eventData")) || [];
+  console.log("📌 目前 localStorage.eventData =", eventData);
+
+  const upcoming = eventData
     .map(e => {
-      const dateTime = new Date(`${e.date}T${e.time}`);
+      // 解析日期與時間
+      const dateStr = e.date;
+      const timeStr = e.time || "00:00";
+      const [y,m,d] = dateStr.split("-").map(Number);
+      const [h,min] = timeStr.split(":").map(Number);
+      const dateTime = new Date(y, m-1, d, h, min);
       return { ...e, dateTime };
     })
     .filter(e => e.dateTime > now)
-    .sort((a, b) => a.dateTime - b.dateTime);
+    .sort((a,b) => a.dateTime - b.dateTime);
 
+  console.log("📌 篩選後 upcoming =", upcoming);
   return upcoming.length > 0 ? upcoming[0] : null;
 }
 
@@ -82,10 +83,20 @@ function displayNextEvent() {
   const nextEventLink = document.getElementById("next-event-link");
   const nextEvent = getNextEvent();
   if (nextEvent) {
-    nextEventLink.textContent = `${nextEvent.date} ${nextEvent.time} - ${nextEvent.name}`;
+    nextEventLink.textContent = `${nextEvent.date} ${nextEvent.time || ""} - ${nextEvent.text}`;
+    nextEventLink.href = "event.html";
   } else {
     nextEventLink.textContent = "無事件";
+    nextEventLink.removeAttribute("href");
   }
 }
 
+// 初始化顯示
 displayNextEvent();
+
+// 監聽其他頁面更新 localStorage，即時刷新
+window.addEventListener("storage", (e) => {
+  if (e.key === "eventData") {
+    displayNextEvent();
+  }
+});
