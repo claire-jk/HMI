@@ -13,6 +13,7 @@ updateDateTime();
 
 // ======= 更新天氣背景（夜晚優先） =======
 async function updateWeather() {
+  const weatherInfo = document.getElementById("weather-info");
   try {
     const hour = new Date().getHours();
 
@@ -20,6 +21,7 @@ async function updateWeather() {
     if (hour >= 18 || hour < 6) {
       document.body.className = "weather-night";
       document.body.style.color = "#fff";
+      weatherInfo.innerHTML = `<span class="icon">🌙</span> 現在是夜晚`;
       return;
     }
 
@@ -29,31 +31,40 @@ async function updateWeather() {
     const data = await res.json();
     const wx = data.records.location[0].weatherElement[0].time[0].parameter.parameterName;
 
+    let icon = "🌤"; // 預設
     if (wx.includes("晴")) {
       document.body.className = "weather-sunny";
+      icon = "☀️";
     } else if (wx.includes("雲") || wx.includes("陰")) {
       document.body.className = "weather-cloudy";
+      icon = "☁️";
     } else if (wx.includes("雨")) {
       document.body.className = "weather-rainy";
+      icon = "🌧";
     } else {
       document.body.className = "weather-default";
+      icon = "🌤";
     }
 
     // 白天字體用深色
-    document.body.style.color = "#333"; 
+    document.body.style.color = "#333";
+
+    // ✅ 更新小區塊（含圖示）
+    weatherInfo.innerHTML = `<span class="icon">${icon}</span> 台北市目前天氣：${wx}`;
+
   } catch (err) {
     console.log("天氣資料抓取失敗，使用預設背景", err);
     document.body.className = "weather-default";
     document.body.style.color = "#333";
+    weatherInfo.innerHTML = `<span class="icon">⚠️</span> 天氣資料載入失敗`;
   }
 }
+
 updateWeather();
 
 // ======= 顯示下一個重大事件 =======
-// 從 localStorage 讀取重大事件列表
 let eventsData = JSON.parse(localStorage.getItem("eventsData")) || [];
 
-// 找到下一個即將到來的事件
 function getNextEvent() {
   const now = new Date();
   const upcoming = eventsData
@@ -67,7 +78,6 @@ function getNextEvent() {
   return upcoming.length > 0 ? upcoming[0] : null;
 }
 
-// 顯示在首頁
 function displayNextEvent() {
   const nextEventLink = document.getElementById("next-event-link");
   const nextEvent = getNextEvent();
@@ -78,5 +88,4 @@ function displayNextEvent() {
   }
 }
 
-// 初始化
 displayNextEvent();

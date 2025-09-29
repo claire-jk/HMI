@@ -35,6 +35,21 @@ body {
   color: #fff;   /* 夜晚字體白色 */
 }
 
+#weather-info {
+  margin-top: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+  display: flex;
+  justify-content: center; /* 水平置中 */
+  align-items: center;     /* 垂直置中 */
+  gap: 8px;                /* 圖示與文字間距 */
+  text-align: center;      /* 多行時也置中 */
+}
+
+#weather-info span.icon {
+  font-size: 1.5em;
+}
+
 /* 容器 */
 .container {
   text-align: center;
