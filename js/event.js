@@ -3,7 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebas
 import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 // Firebase 配置
-const firebaseConfig = {
+/*const firebaseConfig = {
   apiKey: "AIzaSyDCawmUmT3jN0tlnl_wcxzC1Q8VRs4nGhA",
   authDomain: "weather-55116.firebaseapp.com",
   projectId: "weather-55116",
@@ -11,10 +11,10 @@ const firebaseConfig = {
   messagingSenderId: "444123636429",
   appId: "1:444123636429:web:1bf333d3c73bc6fa36ff84",
   measurementId: "G-VSJGYNX08C"
-};
+};*/
 
 // 初始化 Firebase
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig); 
 const db = getFirestore(app);
 
 // ===== DOM 元素 =====
