@@ -8,30 +8,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Great+Vibes&family=Lexend:wght@100..900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
-
-  <!-- Firebase 初始化 -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
-
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDCawmUmT3jN0tlnl_wcxzC1Q8VRs4nGhA",
-      authDomain: "weather-55116.firebaseapp.com",
-      projectId: "weather-55116",
-      storageBucket: "weather-55116.firebasestorage.app",
-      messagingSenderId: "444123636429",
-      appId: "1:444123636429:web:1bf333d3c73bc6fa36ff84",
-      measurementId: "G-VSJGYNX08C"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
 </head>
 <body class="weather-default">
+
+  <!-- 登入區塊 -->
+  <div class="login-container">
+    <div id="login-status">未登入</div>
+    <div id="profile-info" style="display:none"></div>
+    <button id="google-login">Google 登入</button>
+    <button id="email-signup">Email 註冊</button>
+    <button id="email-login">Email 登入</button>
+    <button id="logout-btn">登出</button>
+    <button id="special-btn" style="display:none">特別按鈕</button>
+  </div>
+
   <div class="container">
     <!-- 日期與時間 -->
     <div class="datetime">
@@ -56,8 +46,13 @@
     </div>
   </div>
 
-  <!-- 你的自訂 JS -->
+  <!-- JS -->
+  <!-- 先 home.js 監聽 Firestore 更新與登出事件 -->
   <script type="module" src="js/home.js"></script>
-  <script src="js/event.js"></script> <!-- 共用 scheduleData -->
+  <!-- 再 event.js 監聽 Firestore 更新與登出事件 -->
+  <script src="js/event.js"></script>
+  <!-- 最後 login.js 綁定登入登出事件，登出會廣播 user-logged-out -->
+  <script type="module" src="js/login.js"></script>
+
 </body>
 </html>

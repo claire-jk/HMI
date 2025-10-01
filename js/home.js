@@ -97,8 +97,10 @@ setInterval(updateWeather, 10 * 60 * 1000);
 const eventsCol = collection(db, "events");
 const q = query(eventsCol, orderBy("dateTime"));
 
+let unsubscribe = null; // 監聽器存起來
+
 function updateNextEvent(snapshot) {
-  if (!nextEventLink) return; // 首頁元素不存在就跳過
+  if (!nextEventLink) return;
 
   const now = new Date();
   const upcoming = snapshot.docs
@@ -116,4 +118,24 @@ function updateNextEvent(snapshot) {
   }
 }
 
-onSnapshot(q, updateNextEvent);
+// 啟動監聽
+unsubscribe = onSnapshot(q, updateNextEvent);
+
+// ====== 登出清空資料 ======
+function clearNextEvent() {
+  if (!nextEventLink) return;
+  nextEventLink.textContent = "無事件";
+  nextEventLink.removeAttribute("href");
+}
+
+// 監聽全局登出事件
+window.addEventListener("user-logged-out", () => {
+  // 清空資料
+  clearNextEvent();
+
+  // 停止 Firestore 監聽
+  if (unsubscribe) {
+    unsubscribe();
+    unsubscribe = null;
+  }
+});

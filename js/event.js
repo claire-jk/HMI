@@ -1,6 +1,6 @@
-// ===== Firebase 初始化 =====
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 // Firebase 配置
 const firebaseConfig = {
@@ -13,21 +13,23 @@ const firebaseConfig = {
   measurementId: "G-VSJGYNX08C"
 };
 
-// 初始化 Firebase
-const app = initializeApp(firebaseConfig); 
+const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-// ===== DOM 元素 =====
-const eventList = document.getElementById("event-list");  // 事件頁的列表
-const addBtn = document.getElementById("add-btn");        // 新增按鈕
-const dateInput = document.getElementById("event-date");  // 日期輸入
-const timeInput = document.getElementById("event-time");  // 時間輸入
-const textInput = document.getElementById("event-text");  // 事件名稱輸入
-const nextEventLink = document.getElementById("next-event-link"); // 首頁顯示下一個事件
+// DOM 元素
+const eventList = document.getElementById("event-list");
+const addBtn = document.getElementById("add-btn");
+const dateInput = document.getElementById("event-date");
+const timeInput = document.getElementById("event-time");
+const textInput = document.getElementById("event-text");
+const nextEventLink = document.getElementById("next-event-link");
 
-// ===== 顯示事件清單（event.html） =====
+let unsubscribe = null; // Firestore 監聽器
+
+// 顯示事件列表
 function displayEvents(events) {
-  if (!eventList) return; // 如果不是事件頁，直接跳過
+  if (!eventList) return;
   eventList.innerHTML = "";
 
   events.forEach(event => {
@@ -45,9 +47,9 @@ function displayEvents(events) {
   });
 }
 
-// ===== 顯示下一個重大事件（index.html） =====
+// 顯示下一個重大事件
 function displayNextEvent(events) {
-  if (!nextEventLink) return; // 如果不是首頁，直接跳過
+  if (!nextEventLink) return;
 
   const now = new Date();
   const upcoming = events
@@ -64,7 +66,16 @@ function displayNextEvent(events) {
   }
 }
 
-// ===== 新增事件（event.html） =====
+// 清空畫面資料
+function clearEventData() {
+  if (eventList) eventList.innerHTML = "";
+  if (nextEventLink) {
+    nextEventLink.textContent = "無事件";
+    nextEventLink.removeAttribute("href");
+  }
+}
+
+// 新增事件
 if (addBtn) {
   addBtn.addEventListener("click", async () => {
     const date = dateInput.value;
@@ -72,24 +83,42 @@ if (addBtn) {
     const text = textInput.value.trim();
     if (!date || !text) return alert("請填日期與內容！");
 
-    const dateTime = `${date}T${time}`; // Firestore 排序用
+    const dateTime = `${date}T${time}`;
     await addDoc(collection(db, "events"), { date, time, text, dateTime });
 
-    // 清空輸入框
     dateInput.value = "";
     timeInput.value = "";
     textInput.value = "";
   });
 }
 
-// ===== 監聽 Firestore 即時更新 =====
-const q = query(collection(db, "events"), orderBy("dateTime"));
-onSnapshot(q, snapshot => {
-  const events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  
-  // 事件頁顯示事件列表
-  displayEvents(events);
+// 登入狀態監聽
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // 登入，啟動 Firestore 監聽
+    if (!unsubscribe) {
+      const q = query(collection(db, "events"), orderBy("dateTime"));
+      unsubscribe = onSnapshot(q, snapshot => {
+        const events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        displayEvents(events);
+        displayNextEvent(events);
+      });
+    }
+  } else {
+    // 登出，清空資料並停止監聽
+    clearEventData();
+    if (unsubscribe) {
+      unsubscribe();
+      unsubscribe = null;
+    }
+  }
+});
 
-  // 首頁顯示下一個重大事件
-  displayNextEvent(events);
+// 監聽全局登出事件（從其他頁面登出）
+window.addEventListener("user-logged-out", () => {
+  clearEventData();
+  if (unsubscribe) {
+    unsubscribe();
+    unsubscribe = null;
+  }
 });
