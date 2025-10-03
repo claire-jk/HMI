@@ -98,10 +98,25 @@ onAuthStateChanged(auth, (user) => {
     // 登入，啟動 Firestore 監聽
     if (!unsubscribe) {
       const q = query(collection(db, "events"), orderBy("dateTime"));
-      unsubscribe = onSnapshot(q, snapshot => {
-        const events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        displayEvents(events);
-        displayNextEvent(events);
+      unsubscribe = onSnapshot(q, async (snapshot) => {
+        const now = new Date();
+
+        const events = snapshot.docs.map(docSnap => {
+          const data = docSnap.data();
+          return { id: docSnap.id, ...data };
+        });
+
+        // 🔥 自動刪除過期事件
+        for (const event of events) {
+          if (event.dateTime && new Date(event.dateTime) < now) {
+            await deleteDoc(doc(db, "events", event.id));
+          }
+        }
+
+        // 僅顯示未過期事件
+        const upcomingEvents = events.filter(e => !e.dateTime || new Date(e.dateTime) >= now);
+        displayEvents(upcomingEvents);
+        displayNextEvent(upcomingEvents);
       });
     }
   } else {
