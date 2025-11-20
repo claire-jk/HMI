@@ -1,136 +1,369 @@
+/* -------------------------
+    全域設定 (已修改為深色背景)
+-------------------------- */
 body {
-  margin: 0;
-  padding: 0;
-  font-family: "Zen Kurenaido", sans-serif;
-  background-color: #000;
-  color: #fff;
+    margin: 0;
+    padding: 0;
+    font-family: 'Lexend', 'Zen Kurenaido', sans-serif;
+    /* 背景改為深色 */
+    background: linear-gradient(135deg, #1f2937, #0f172a); 
+    min-height: 100vh;
+    /* 文字顏色改為淺色 */
+    color: #f3f4f6; 
 }
 
+/* -------------------------
+    Header
+-------------------------- */
 header {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  background: #111;
+    display: flex;
+    align-items: center;
+    padding: 20px 30px;
+    gap: 15px;
 }
 
 header h1 {
-  flex: 1;
-  text-align: center;
-  font-size: 1.8rem;
-  font-family: "Zen Kurenaido", sans-serif;
-  letter-spacing: 2px;
+    font-size: 28px;
+    font-weight: 600;
+    color: #fff; 
 }
 
-/* === 左上角首頁 icon === */
 .home-icon {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  font-size: 2rem;
-  color: #fff; /* 改成白色，深色背景更清楚 */
-  text-decoration: none;
-  z-index: 1000;
-  transition: color 0.3s;
+    font-size: 22px;
+    color: #ccc; 
+    text-decoration: none;
+    transition: 0.2s;
 }
-
 .home-icon:hover {
-  color: #ffcc00; /* hover 時變亮色 */
+    color: #fff;
 }
 
-.events-section {
-  padding: 20px;
+/* -------------------------
+    新增事件按鈕
+-------------------------- */
+.add-event-btn {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5); 
+    transition: 0.25s;
+}
+.add-event-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.03);
 }
 
-.events-section h2 {
-  margin-top: 20px;
-  font-size: 1.4rem;
-  border-left: 4px solid #fff;
-  padding-left: 8px;
+/* -------------------------
+    即將到來標題
+-------------------------- */
+.section-title {
+    padding: 20px 35px 10px;
+}
+.section-title h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #f3f4f6; 
 }
 
-/* === 事件列表 === */
-#event-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* -------------------------
+    事件列表容器
+-------------------------- */
+.event-list {
+    padding: 20px 35px 50px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 25px;
 }
 
-#event-list li {
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  background: #1a1a1a;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background 0.3s;
+/* -------------------------
+    事件卡片 
+-------------------------- */
+.event-card {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 18px;
+    padding: 20px 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    transition: 0.25s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(168, 85, 247, 0.2);
 }
 
-#event-list li:hover {
-  background: #333;
+.event-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+}
+.event-date, .event-time {
+    margin-top: 4px;
+    font-size: 15px;
+    opacity: 0.7;
+}
+.event-countdown {
+    margin-top: 14px;
+    background: rgba(168, 85, 247, 0.2); 
+    padding: 14px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px; 
+    color: #d8b4fe; 
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* === 刪除按鈕 === */
-.delete-btn {
-  background: transparent;
-  border: none;
-  color: #ff6666;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-left: 10px;
-  transition: transform 0.2s, color 0.2s;
+/* 卡片底部按鈕列 */
+.card-btn-row {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-end; /* 預設靠右對齊 */
+    gap: 10px; /* 統一按鈕間距 */
 }
 
-.delete-btn:hover {
-  color: #ff3333;
-  transform: scale(1.1);
+.card-btn-row button, .card-btn-row a {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
 
-/* === 新增事件表單 === */
-.add-event {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 15px;
+/* 連結按鈕 (優先佔用空間) */
+.card-link { 
+    background: #a855f7;
+    color: white;
+    flex-grow: 1; /* 佔據剩餘空間 */
+}
+.card-link:hover {
+    background: #9333ea;
 }
 
-.add-event input[type="date"],
-.add-event input[type="time"],
-.add-event input[type="text"] {
-  padding: 8px;
-  border: 1px solid #555;
-  background: #111;
-  color: #fff;
-  flex: 1;
-  min-width: 100px;
-  border-radius: 6px; /* 圓角 */
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+.card-edit {
+    background: #4a5568; 
+    color: #fff;
+}
+.card-delete {
+    background: #dc2626; 
+    color: #fff;
 }
 
-.add-event button {
-  padding: 8px 12px;
-  background: #444;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 6px; /* 圓角 */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-  transition: background 0.3s, transform 0.2s;
+/* -------------------------
+    Modal
+-------------------------- */
+.modal {
+    position: fixed;
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* 深色半透明背景 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    
+    /* 確保初始狀態隱藏，使用 opacity/visibility 實現動畫 */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.add-event button:hover {
-  background: #666;
-  transform: translateY(-2px);
+.modal.hidden {
+    opacity: 0;
+    visibility: hidden; /* 確保元素在隱藏時不可點擊 */
 }
 
-/* === RWD 手機版 === */
+.modal-content {
+    background: #1f2937; /* Modal 內容區塊背景與 body 相近 */
+    width: 95%;
+    max-width: 520px;
+    padding: 25px 30px 30px;
+    border-radius: 18px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    position: relative;
+    color: #f3f4f6; /* Modal 內文字顏色 */
+}
+
+/* 關閉按鈕（X） */
+.close-btn {
+    position: absolute;
+    right: 20px;
+    top: 16px;
+    font-size: 28px;
+    color: #aaa;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.close-btn:hover {
+    color: #fff;
+}
+
+/* Modal 標題 */
+.modal-content h2 {
+    font-size: 24px;
+    margin-bottom: 6px;
+    color: #fff;
+}
+.modal-desc {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 18px;
+    color: #9ca3af;
+}
+
+/* -------------------------
+    Modal 表單欄位
+-------------------------- */
+label {
+    margin-top: 12px;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #d1d5db;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #4b5563;
+    margin-top: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    background-color: #374151; /* 輸入框深色背景 */
+    color: #f3f4f6;
+    box-sizing: border-box;
+}
+
+textarea {
+    height: 80px;
+    resize: none;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 0 2px rgba(189, 118, 255, 0.702);
+}
+
+.form-flex {
+    display: flex;
+    gap: 15px;
+}
+.field {
+    flex: 1;
+}
+
+/* -------------------------
+    Modal 按鈕列
+-------------------------- */
+.modal-btn-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.cancel-btn, .confirm-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+}
+
+.cancel-btn {
+    background: #4b5563;
+    color: white;
+}
+.cancel-btn:hover {
+    background: #6b7280;
+}
+
+.confirm-btn {
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    color: white;
+    font-weight: 600;
+}
+.confirm-btn:hover {
+    opacity: 0.9;
+}
+
+/* -------------------------
+    RWD 手機版 (Max-width: 480px) - 優化
+-------------------------- */
 @media (max-width: 480px) {
-  header h1 {
-    font-size: 1.2rem;
-  }
-  .add-event input,
-  .add-event button,
-  #event-list li {
-    font-size: 0.9rem;
-  }
+    header {
+        padding: 15px;
+    }
+    
+    /* 讓新增按鈕移到下方並佔滿寬度 */
+    .add-event-btn {
+        position: static; 
+        width: calc(100% - 30px);
+        margin: 10px 15px 20px;
+        order: 3; /* 確保它顯示在標題和列表之間 */
+    }
+
+    .section-title {
+        padding: 10px 15px 5px;
+    }
+    
+    /* 事件列表單欄顯示 */
+    .event-list {
+        padding: 10px 15px 40px;
+        grid-template-columns: 1fr; 
+        gap: 15px;
+    }
+
+    /* 倒數計時文字調整 */
+    .event-countdown {
+        font-size: 15px; 
+        white-space: normal; 
+        word-break: break-word;
+    }
+
+    /* 卡片底部按鈕列：讓按鈕水平排列並佔滿寬度 */
+    .card-btn-row {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 8px;
+    }
+    
+    .card-btn-row button, .card-btn-row a {
+        flex-grow: 1; 
+        padding: 10px 0;
+    }
+    
+    .card-link {
+        flex-grow: 2; /* 連結按鈕佔用較多空間 */
+    }
+    
+    /* Modal 表單調整 */
+    .form-flex {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .modal-content {
+        padding: 20px;
+    }
 }

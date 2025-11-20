@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的即時氣象站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/weather.css"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    
+</head>
+<body>
+
+    <header class="header">
+        <a href="index.html" class="home-icon" title="首頁"><i class="fas fa-home"></i></a>
+        <div class="header-content">
+            <h1>我的即時氣象站</h1>
+            <p id="current-time" class="time-display">正在載入時間...</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="loading" class="loading-message">
+            <i class="fas fa-spinner fa-spin"></i> 正在抓取天氣資料...
+        </div>
+
+        <div id="weather-card" class="weather-card hidden">
+            <h2 id="location-name"></h2> 
+            
+            <div class="main-weather">
+                <span id="weather-icon" class="icon"></span>
+                <p id="weather-text" class="text"></p>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <i class="fas fa-thermometer-half"></i>
+                    <span class="label">最高溫度 (Max Temp)</span>
+                    <span id="max-temp" class="value"></span>
+                </div>
+                
+                <div class="detail-item">
+                    <i class="fas fa-cloud-sun-rain"></i>
+                    <span class="label">降雨機率 (PoP)</span>
+                    <span id="pop" class="value"></span>
+                </div>
+                
+                <div class="detail-item aqi-item" id="aqi-detail-item">
+                    <i class="fas fa-smog"></i>
+                    <span class="label">空氣品質 (AQI)</span>
+                    <span id="aqi-value" class="value">N/A</span>
+                    <span id="aqi-status" class="value note"></span>
+                </div>
+            </div>
+
+            <p class="update-info">資料來源：中央氣象署 & 環境部 | <span id="update-time"></span></p>
+        </div>
+
+        <div id="forecast-card" class="weather-card hidden forecast-card">
+            <h2>七日天氣預報 📈</h2>
+            <div class="chart-container">
+                <canvas id="weatherChart"></canvas>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="js/weather.js"></script>
+</body>
+</html>

@@ -4,14 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>重大事件列表</title>
+
   <!-- 引入 Font Awesome icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/event.css">
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Great+Vibes&family=Lexend:wght@100..900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
-
 </head>
+
 <body>
   <header>
     <!-- 左上角首頁 icon -->
@@ -19,28 +22,71 @@
     <h1>重大事件</h1>
   </header>
 
-  <section class="events-section">
-    <h2>即將到來的事件</h2>
-    <!-- 事件列表 -->
-    <ul id="event-list">
-      <!-- 範例結構，JS 會動態生成 -->
-      <!--
-      <li>
-        2025-10-10 14:00 國慶煙火
-        <button class="delete-btn"><i class="fas fa-trash"></i></button>
-      </li>
-      -->
-    </ul>
+  <!-- 新增事件按鈕 -->
+  <button class="add-event-btn" id="openModalBtn">＋ 新增事件</button>
 
-    <!-- 新增事件表單 -->
-    <div class="add-event">
-      <input type="date" id="event-date">
-      <input type="time" id="event-time">
-      <input type="text" id="event-text" placeholder="輸入事件名稱">
-      <button id="add-btn">新增事件</button>
-    </div>
+  <!-- 即將到來標題 -->
+  <section class="section-title">
+    <h2>📍 即將到來</h2>
   </section>
 
-  <script type="module" src="js/event.js"></script>
+  <!-- 事件卡片放置區 -->
+  <div id="eventList" class="event-list">
+    <!-- 事件卡片會由 JS 動態產生 -->
+  </div>
+
+  
+  <!-- ⭐ 新增事件 Modal：點擊按鈕會跳出 -->
+  <div id="eventModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModalBtn">&times;</span>
+
+      <h2>新增事件</h2>
+      <p class="modal-desc">記錄你的重要時刻，設定提醒倒數計時</p>
+
+      <!-- 事件名稱 -->
+      <label>事件名稱 *</label>
+      <input id="eventName" type="text" placeholder="例如：演唱會搶票">
+
+      <!-- 描述 -->
+      <label>描述</label>
+      <textarea id="eventDesc" placeholder="加入事件相關描述..."></textarea>
+
+      <!-- 連結 -->
+      <label>連結</label>
+      <input id="eventLink" type="url" placeholder="https://...">
+
+      <div class="form-flex">
+        <!-- 日期 -->
+        <div class="field">
+          <label>日期 *</label>
+          <input id="eventDate" type="date">
+        </div>
+
+        <!-- 時間 -->
+        <div class="field">
+          <label>時間 *</label>
+          <input id="eventTime" type="time">
+        </div>
+      </div>
+
+      <!-- 分類 -->
+      <label>分類</label>
+      <select id="eventCategory">
+        <option value="演唱會">演唱會</option>
+        <option value="其他">其他</option>
+      </select>
+
+      <!-- 按鈕列 -->
+      <div class="modal-btn-row">
+        <button class="cancel-btn" id="cancelBtn">取消</button>
+        <button class="confirm-btn" id="createEventBtn">新增事件</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 事件功能 JS（之後會加入） -->
+  <script src="js/event.js" type="module"></script>
+
 </body>
 </html>

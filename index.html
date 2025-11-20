@@ -17,7 +17,6 @@
     <div id="profile-info" style="display:none"></div>
     <button id="google-login">Google 登入</button>
     <button id="logout-btn">登出</button>
-    <button id="special-btn" style="display:none">特別按鈕</button>
   </div>
 
   <div class="container">
@@ -38,17 +37,18 @@
 
     <!-- 功能選單 -->
     <div class="menu">
-      <a href="schedule.html" class="menu-btn">📅 行程列表</a>
+      <a href="weather.html" class="menu-btn">🌦️ 天氣預報</a>
       <a href="event.html" class="menu-btn">⭐ 重大事件</a>
       <a href="song.html" class="menu-btn">🎶 歌曲</a>
     </div>
   </div>
 
   <!-- JS -->
+  <script type="module" src="js/firebase-init.js"></script>
   <!-- 先 home.js 監聽 Firestore 更新與登出事件 -->
   <script type="module" src="js/home.js"></script>
   <!-- 再 event.js 監聽 Firestore 更新與登出事件 -->
-  <script src="js/event.js"></script>
+  <script type="module" src="js/event.js"></script>
   <!-- 最後 login.js 綁定登入登出事件，登出會廣播 user-logged-out -->
   <script type="module" src="js/login.js"></script>
 

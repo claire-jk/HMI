@@ -1,139 +1,386 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+// =========================================
+// Firebase 導入 (從 firebase-init.js 導入實例)
+// =========================================
+import { auth, db } from "./firebase-init.js";
 
-// Firebase 配置
-const firebaseConfig = {
-  apiKey: "AIzaSyDCawmUmT3jN0tlnl_wcxzC1Q8VRs4nGhA",
-  authDomain: "weather-55116.firebaseapp.com",
-  projectId: "weather-55116",
-  storageBucket: "weather-55116.firebasestorage.app",
-  messagingSenderId: "444123636429",
-  appId: "1:444123636429:web:1bf333d3c73bc6fa36ff84",
-  measurementId: "G-VSJGYNX08C"
-};
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    orderBy,
+    onSnapshot,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
 
+// =========================================
 // DOM 元素
-const eventList = document.getElementById("event-list");
-const addBtn = document.getElementById("add-btn");
-const dateInput = document.getElementById("event-date");
-const timeInput = document.getElementById("event-time");
-const textInput = document.getElementById("event-text");
-const nextEventLink = document.getElementById("next-event-link");
+// =========================================
+const openModalBtn = document.getElementById("openModalBtn");
+const eventModal = document.getElementById("eventModal");
+const closeModalBtn = document.getElementById("closeModalBtn");
+const cancelBtn = document.getElementById("cancelBtn");
+const createEventBtn = document.getElementById("createEventBtn");
+const eventList = document.getElementById("eventList");
 
-let unsubscribe = null; // Firestore 監聽器
+// Modal 內標題與確認按鈕
+const modalTitle = eventModal ? eventModal.querySelector("h2") : null;
+const confirmBtn = createEventBtn;
 
-// 顯示事件列表
-function displayEvents(events) {
-  if (!eventList) return;
-  eventList.innerHTML = "";
+// 表單欄位
+const eventName = document.getElementById("eventName");
+const eventDesc = document.getElementById("eventDesc");
+const eventLink = document.getElementById("eventLink");
+const eventDate = document.getElementById("eventDate");
+const eventTime = document.getElementById("eventTime");
+const eventCategory = document.getElementById("eventCategory");
 
-  events.forEach(event => {
-    const li = document.createElement("li");
-    li.textContent = `${event.date} ${event.time || "00:00"} ${event.text}`;
 
-    const delBtn = document.createElement("button");
-    delBtn.textContent = "🗑";
-    delBtn.addEventListener("click", async () => {
-      await deleteDoc(doc(db, "events", event.id));
+// =========================================
+// 狀態變數
+// =========================================
+let events = [];
+let currentEditId = null;
+let unsubscribe = null;
+let currentUserID = null;
+
+
+// =================================================
+// 工具函式
+// =================================================
+
+// 清空表單與 modal 狀態
+function resetModal() {
+    if (!eventModal) return;
+
+    eventName.value = "";
+    eventDesc.value = "";
+    eventLink.value = "";
+    eventDate.value = "";
+    eventTime.value = "";
+    eventCategory.value = "其他";
+
+    currentEditId = null;
+
+    if (modalTitle) modalTitle.textContent = "新增事件";
+    if (confirmBtn) confirmBtn.textContent = "新增事件";
+
+    eventModal.classList.add("hidden");
+}
+
+// 倒數字串產生
+function getCountdownText(dateStr, timeStr) {
+    const target = new Date(`${dateStr}T${timeStr}:00`);
+    const now = new Date();
+    let diff = target - now;
+
+    if (diff <= 0) return "活動進行中或已過期";
+
+    const SEC = 1000;
+    const MIN = SEC * 60;
+    const HOUR = MIN * 60;
+    const DAY = HOUR * 24;
+
+    const days = Math.floor(diff / DAY);
+    diff %= DAY;
+
+    const hours = Math.floor(diff / HOUR);
+    diff %= HOUR;
+
+    const minutes = Math.floor(diff / MIN);
+    diff %= MIN;
+
+    const seconds = Math.floor(diff / SEC);
+
+    let output = [];
+    if (days > 0) output.push(`${days} 天`);
+
+    const h = String(hours).padStart(2, '0');
+    const m = String(minutes).padStart(2, '0');
+    const s = String(seconds).padStart(2, '0');
+
+    output.push(`${h} 時 ${m} 分 ${s} 秒`);
+
+    return output.join(" ").trim().replace(/\s+/g, " ");
+}
+
+
+// =================================================
+// 渲染事件卡片
+// =================================================
+function renderEvents() {
+    if (!eventList) return;
+
+    if (!currentUserID) {
+        eventList.innerHTML = `<p style="text-align:center;color:#777;margin-top:50px;">請先登入以載入您的重大事件。</p>`;
+        return;
+    }
+
+    const sortedEvents = [...events].sort((a, b) => {
+        const dateA = new Date(`${a.date}T${a.time}:00`);
+        const dateB = new Date(`${b.date}T${b.time}:00`);
+        return dateA - dateB;
     });
 
-    li.appendChild(delBtn);
-    eventList.appendChild(li);
-  });
+    eventList.innerHTML = "";
+
+    if (sortedEvents.length === 0) {
+        eventList.innerHTML = `<p style="text-align:center;color:#777;margin-top:50px;">您還沒有新增任何事件。</p>`;
+        return;
+    }
+
+    sortedEvents.forEach(e => {
+        const card = document.createElement("div");
+        card.classList.add("event-card");
+        card.dataset.dateTime = `${e.date} ${e.time}`;
+        card.dataset.id = e.id;
+
+        const hasLink = e.link && e.link.trim() !== "";
+        const linkButton = hasLink
+            ? `<a href="${e.link}" target="_blank" class="card-link">前往連結 <i class="fas fa-external-link-alt"></i></a>`
+            : "";
+
+        const editButton = `<button class="card-edit" data-id="${e.id}">編輯</button>`;
+
+        card.innerHTML = `
+          <div class="event-title">${e.name}</div>
+          <div class="event-date">${e.date} ${e.time}</div>
+          <div class="event-countdown">${getCountdownText(e.date, e.time)}</div>
+
+          <div class="card-btn-row">
+            ${linkButton}
+            ${editButton}
+            <button class="card-delete" data-id="${e.id}">刪除</button>
+          </div>
+        `;
+
+        eventList.appendChild(card);
+    });
+
+    updateCountdown();
 }
 
-// 顯示下一個重大事件
-function displayNextEvent(events) {
-  if (!nextEventLink) return;
 
-  const now = new Date();
-  const upcoming = events
-    .filter(e => e.dateTime && new Date(e.dateTime) >= now)
-    .sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+// =================================================
+// 倒數更新
+// =================================================
+function updateCountdown() {
+    if (!eventList) return;
 
-  const nextEvent = upcoming[0];
-  if (nextEvent) {
-    nextEventLink.textContent = `${nextEvent.text}（${nextEvent.date} ${nextEvent.time || "00:00"}）`;
-    nextEventLink.href = "event.html";
-  } else {
-    nextEventLink.textContent = "無事件";
-    nextEventLink.removeAttribute("href");
-  }
+    const countdownElements = document.querySelectorAll(".event-countdown");
+    countdownElements.forEach(countdownEl => {
+        const card = countdownEl.closest(".event-card");
+        if (!card) return;
+        const [dateStr, timeStr] = card.dataset.dateTime.split(" ");
+        countdownEl.textContent = getCountdownText(dateStr, timeStr);
+    });
 }
 
-// 清空畫面資料
-function clearEventData() {
-  if (eventList) eventList.innerHTML = "";
-  if (nextEventLink) {
-    nextEventLink.textContent = "無事件";
-    nextEventLink.removeAttribute("href");
-  }
-}
 
-// 新增事件
-if (addBtn) {
-  addBtn.addEventListener("click", async () => {
-    const date = dateInput.value;
-    const time = timeInput.value || "00:00";
-    const text = textInput.value.trim();
-    if (!date || !text) return alert("請填日期與內容！");
+// =================================================
+// Firestore 監聽與同步
+// =================================================
+function startFirestoreListener(uid) {
+    if (unsubscribe) unsubscribe();
 
-    const dateTime = `${date}T${time}`;
-    await addDoc(collection(db, "events"), { date, time, text, dateTime });
+    const eventsCol = collection(db, "events");
+    const q = query(
+        eventsCol,
+        where("uid", "==", uid),
+        orderBy("dateTime")
+    );
 
-    dateInput.value = "";
-    timeInput.value = "";
-    textInput.value = "";
-  });
-}
+    unsubscribe = onSnapshot(
+        q,
+        snapshot => {
+            events = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
 
-// 登入狀態監聽
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // 登入，啟動 Firestore 監聽
-    if (!unsubscribe) {
-      const q = query(collection(db, "events"), orderBy("dateTime"));
-      unsubscribe = onSnapshot(q, async (snapshot) => {
-        const now = new Date();
+            renderEvents();
 
-        const events = snapshot.docs.map(docSnap => {
-          const data = docSnap.data();
-          return { id: docSnap.id, ...data };
-        });
+            const now = new Date();
+            const upcoming = events.filter(e => e.dateTime && new Date(e.dateTime) >= now);
+            const nextEvent = upcoming.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime))[0];
 
-        // 🔥 自動刪除過期事件
-        for (const event of events) {
-          if (event.dateTime && new Date(event.dateTime) < now) {
-            await deleteDoc(doc(db, "events", event.id));
-          }
+            if (nextEvent) {
+                window.dispatchEvent(new CustomEvent("next-event-updated", {
+                    detail: {
+                        text: nextEvent.name,
+                        date: nextEvent.date,
+                        time: nextEvent.time
+                    }
+                }));
+            } else {
+                window.dispatchEvent(new CustomEvent("next-event-updated", { detail: {} }));
+            }
+        },
+        error => {
+            console.error("Firestore 監聽失敗:", error);
         }
+    );
+}
 
-        // 僅顯示未過期事件
-        const upcomingEvents = events.filter(e => !e.dateTime || new Date(e.dateTime) >= now);
-        displayEvents(upcomingEvents);
-        displayNextEvent(upcomingEvents);
-      });
-    }
-  } else {
-    // 登出，清空資料並停止監聽
-    clearEventData();
+function stopFirestoreListener() {
     if (unsubscribe) {
-      unsubscribe();
-      unsubscribe = null;
+        unsubscribe();
+        unsubscribe = null;
     }
-  }
+
+    events = [];
+
+    if (eventList) {
+        eventList.innerHTML =
+            `<p style="text-align:center;color:#777;margin-top:50px;">請先登入以載入您的重大事件。</p>`;
+    }
+}
+
+
+// =================================================
+// 監聽登入狀態
+// =================================================
+onAuthStateChanged(auth, user => {
+    if (user) {
+        currentUserID = user.uid;
+        startFirestoreListener(user.uid);
+    } else {
+        currentUserID = null;
+        stopFirestoreListener();
+        window.dispatchEvent(new CustomEvent("next-event-updated", { detail: {} }));
+    }
 });
 
-// 監聽全局登出事件（從其他頁面登出）
+
+// =================================================
+// Modal 開啟 / 關閉
+// =================================================
+if (openModalBtn) {
+    openModalBtn.addEventListener("click", () => {
+        if (!currentUserID) return alert("請先登入才能新增事件。");
+
+        resetModal();
+        eventModal.classList.remove("hidden");
+    });
+}
+
+if (closeModalBtn) closeModalBtn.addEventListener("click", resetModal);
+if (cancelBtn) cancelBtn.addEventListener("click", resetModal);
+
+
+// =================================================
+// 載入事件到 Modal
+// =================================================
+function loadEventToModal(id) {
+    const event = events.find(e => e.id === id);
+    if (!event || !eventModal) return;
+
+    currentEditId = id;
+
+    if (modalTitle) modalTitle.textContent = `編輯事件: ${event.name}`;
+    if (confirmBtn) confirmBtn.textContent = "儲存變更";
+
+    eventName.value = event.name;
+    eventDesc.value = event.desc;
+    eventLink.value = event.link;
+    eventDate.value = event.date;
+    eventTime.value = event.time;
+    eventCategory.value = event.category;
+
+    eventModal.classList.remove("hidden");
+}
+
+
+// =================================================
+// 新增 / 編輯事件
+// =================================================
+if (createEventBtn) {
+    createEventBtn.addEventListener("click", async () => {
+        if (!currentUserID) return alert("請先登入才能操作。");
+
+        if (!eventName.value || !eventDate.value || !eventTime.value) {
+            alert("請填寫必填欄位 *");
+            return;
+        }
+
+        let linkValue = eventLink.value.trim();
+        if (linkValue && !linkValue.startsWith("http")) {
+            linkValue = "https://" + linkValue;
+        }
+
+        const dateTime = new Date(`${eventDate.value}T${eventTime.value}:00`).toISOString();
+
+        const eventData = {
+            uid: currentUserID,
+            name: eventName.value,
+            desc: eventDesc.value,
+            link: linkValue,
+            date: eventDate.value,
+            time: eventTime.value,
+            category: eventCategory.value,
+            dateTime: dateTime
+        };
+
+        try {
+            if (currentEditId) {
+                const docRef = doc(db, "events", currentEditId);
+                await updateDoc(docRef, eventData);
+                alert("事件更新成功！");
+            } else {
+                await addDoc(collection(db, "events"), eventData);
+                alert("事件新增成功！");
+            }
+            resetModal();
+        } catch (error) {
+            console.error("事件操作失敗:", error);
+            alert("事件操作失敗，請稍後再試。");
+        }
+    });
+}
+
+
+// =================================================
+// 刪除 / 編輯按鈕監聽
+// =================================================
+if (eventList) {
+    eventList.addEventListener("click", async e => {
+        const target = e.target.closest("button") || e.target.closest("a");
+        const id = target ? target.dataset.id : null;
+        if (!id || !currentUserID) return;
+
+        if (target.classList.contains("card-delete")) {
+            if (confirm("確定要刪除這個事件嗎？")) {
+                try {
+                    await deleteDoc(doc(db, "events", id));
+                    alert("事件已刪除。");
+                } catch (error) {
+                    console.error("刪除失敗:", error);
+                    alert("刪除失敗，請稍後再試。");
+                }
+            }
+        }
+
+        if (target.classList.contains("card-edit")) {
+            loadEventToModal(id);
+        }
+    });
+}
+
+
+// =================================================
+// 首次渲染 + 倒數更新
+// =================================================
+if (eventList) {
+    eventList.innerHTML = `<p style="text-align:center;color:#777;margin-top:50px;">載入中...</p>`;
+    setInterval(updateCountdown, 1000);
+}
+
 window.addEventListener("user-logged-out", () => {
-  clearEventData();
-  if (unsubscribe) {
-    unsubscribe();
-    unsubscribe = null;
-  }
+    stopFirestoreListener();
+    window.dispatchEvent(new CustomEvent("next-event-updated", { detail: {} }));
 });
