@@ -9,9 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-    
 </head>
 <body>
 
@@ -49,22 +46,14 @@
                     <span id="pop" class="value"></span>
                 </div>
                 
-                <div class="detail-item aqi-item" id="aqi-detail-item">
-                    <i class="fas fa-smog"></i>
-                    <span class="label">空氣品質 (AQI)</span>
-                    <span id="aqi-value" class="value">N/A</span>
-                    <span id="aqi-status" class="value note"></span>
+                <div class="detail-item">
+                    <i class="fas fa-tint"></i>
+                    <span class="label">濕度 (Humidity)</span>
+                    <span id="humidity-note" class="value note">請參考降雨機率</span>
                 </div>
             </div>
 
-            <p class="update-info">資料來源：中央氣象署 & 環境部 | <span id="update-time"></span></p>
-        </div>
-
-        <div id="forecast-card" class="weather-card hidden forecast-card">
-            <h2>七日天氣預報 📈</h2>
-            <div class="chart-container">
-                <canvas id="weatherChart"></canvas>
-            </div>
+            <p class="update-info">資料來源：中央氣象署 | <span id="update-time"></span></p>
         </div>
 
     </main>
