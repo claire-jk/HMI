@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七天預報 | 我的即時氣象站</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/weather.css"> 
+    <link rel="stylesheet" href="css/forecast.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="index.html" class="home-icon" title="回主頁"><i class="fas fa-home"></i></a>
+
+        <div class="header-content">
+            <h1>未來 7 天天氣預報</h1>
+            <p id="current-time" class="time-display">正在載入時間...</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="city-selector-wrapper">
+            <label for="city-select">選擇城市：</label>
+            <select id="city-select">
+                <option value="臺北市">臺北市</option>
+                <option value="新北市">新北市</option>
+                <option value="桃園市">桃園市</option>
+                <option value="臺中市">台中市</option>
+                <option value="臺南市">台南市</option>
+                <option value="高雄市">高雄市</option>
+                <option value="基隆市">基隆市</option>
+                <option value="新竹市">新竹市</option>
+                <option value="嘉義市">嘉義市</option>
+            </select>
+        </div>
+        
+        <h2 id="forecast-location-name" class="forecast-title"></h2>
+
+        <section id="forecast-section" class="forecast-block">
+            <div id="forecast-list" class="forecast-grid">
+                <p class="loading-forecast">載入中...</p>
+            </div>
+        </section>
+
+        <p class="update-info">資料來源：中央氣象署 | <span id="update-time"></span></p>
+
+    </main>
+
+    <script src="js/forecast.js"></script>
+</body>
+
+</html>

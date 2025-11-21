@@ -1,0 +1,61 @@
+/* ==========================================================
+   forecast.css
+   7 天預報頁面專屬樣式
+========================================================== */
+
+.city-selector-wrapper {
+    /* 讓城市選擇器在預報頁面中居中或靠左 */
+    margin: 20px 0 30px;
+    padding: 0 10px;
+    font-size: 1.1rem;
+}
+
+.city-selector-wrapper select {
+    /* 保持與主頁相似的樣式 */
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #2a2a2a;
+    color: var(--text-light);
+    border: 1px solid #444;
+}
+
+.forecast-title {
+    color: var(--accent-color); /* 將標題顏色改為橘色，與主頁區分 */
+    font-size: 1.8em;
+    margin-top: 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.forecast-block {
+    /* 調整區塊背景，讓它更像主要內容區 */
+    background: var(--card-background);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow);
+    padding: 30px 20px;
+}
+
+.loading-forecast {
+    text-align: center;
+    font-size: 1.2em;
+    color: var(--primary-color);
+}
+
+.forecast-item .desc {
+    font-size: 0.9em;
+    color: var(--text-muted);
+    margin: 5px 0 0;
+}
+
+/* 手機版適應 */
+@media (max-width: 480px) {
+    .city-selector-wrapper {
+        font-size: 1rem;
+        text-align: center;
+    }
+    .forecast-title {
+        font-size: 1.5em;
+        text-align: center;
+    }
+}

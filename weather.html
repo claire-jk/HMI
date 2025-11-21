@@ -1,63 +1,113 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的即時氣象站</title>
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/weather.css"> 
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/weather.css">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
+    <!-- Header -->
     <header class="header">
-        <a href="index.html" class="home-icon" title="首頁"><i class="fas fa-home"></i></a>
+        <a href="index.html" class="home-icon" title="首頁">
+            <i class="fas fa-home"></i>
+        </a>
+
         <div class="header-content">
             <h1>我的即時氣象站</h1>
             <p id="current-time" class="time-display">正在載入時間...</p>
         </div>
     </header>
 
+    <!-- Main Container -->
     <main class="container">
+
+        <!-- Loading -->
         <div id="loading" class="loading-message">
             <i class="fas fa-spinner fa-spin"></i> 正在抓取天氣資料...
         </div>
 
+        <!-- Weather Card -->
         <div id="weather-card" class="weather-card hidden">
-            <h2 id="location-name"></h2> 
-            
+
+            <!-- City Selector -->
+            <div class="city-selector">
+                <label for="city-select">選擇城市：</label>
+                <select id="city-select">
+                    <option value="臺北市">臺北市</option>
+                    <option value="新北市">新北市</option>
+                    <option value="臺北市">基隆市</option>
+                    <option value="桃園市">桃園市</option>
+                    <option value="新竹市">新竹市</option>
+                    <option value="新竹市">新竹縣</option>
+                    <option value="新竹市">苗栗縣</option>
+                    <option value="臺中市">臺中市</option>
+                    <option value="新竹市">彰化縣</option>
+                    <option value="新竹市">雲林縣</option>
+                    <option value="基隆市">嘉義市</option>
+                    <option value="基隆市">嘉義縣</option>
+                    <option value="臺南市">臺南市</option>
+                    <option value="高雄市">高雄市</option>
+                    <option value="嘉義市">屏東縣</option>
+                    <option value="基隆市">宜蘭縣</option>
+                    <option value="基隆市">花蓮縣</option>
+                    <option value="基隆市">臺東縣</option>
+                    <option value="基隆市">金門縣</option>
+                    <option value="基隆市">連江縣</option>
+                    <option value="基隆市">澎湖縣</option>
+                </select>
+            </div>
+
+            <!-- Current Weather -->
+            <h2 id="location-name"></h2>
+
             <div class="main-weather">
                 <span id="weather-icon" class="icon"></span>
                 <p id="weather-text" class="text"></p>
             </div>
 
+            <!-- Weather Details -->
             <div class="details-grid">
+
                 <div class="detail-item">
-                    <i class="fas fa-thermometer-half"></i>
-                    <span class="label">最高溫度 (Max Temp)</span>
-                    <span id="max-temp" class="value"></span>
+                    <i class="fas fa-temperature-three-quarters"></i>
+                    <span class="label">溫度範圍 (Min ~ Max Temp)</span>
+                    <span id="temp-range" class="value"></span>
                 </div>
-                
+
                 <div class="detail-item">
                     <i class="fas fa-cloud-sun-rain"></i>
                     <span class="label">降雨機率 (PoP)</span>
                     <span id="pop" class="value"></span>
                 </div>
-                
-                <div class="detail-item">
-                    <i class="fas fa-tint"></i>
-                    <span class="label">濕度 (Humidity)</span>
-                    <span id="humidity-note" class="value note">請參考降雨機率</span>
-                </div>
+
             </div>
 
-            <p class="update-info">資料來源：中央氣象署 | <span id="update-time"></span></p>
-        </div>
+            <!-- Update Time -->
+            <p class="update-info">
+                資料來源：中央氣象署 |
+                <span id="update-time"></span>
+            </p>
+
+        </div> <!-- weather-card end -->
 
     </main>
 
+    <!-- JS -->
     <script src="js/weather.js"></script>
 </body>
+
 </html>
